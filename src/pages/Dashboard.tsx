@@ -19,13 +19,11 @@ const Dashboard: React.FC = () => {
 
   return (
     <div className="p-6 max-w-4xl mx-auto">
-      {/* Hero Section */}
       <div className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg p-6 mb-8 shadow-md">
         <h1 className="text-4xl font-bold mb-2">Welcome back, {user.firstName} 👋</h1>
         <p className="text-lg">Manage your profile, explore products, and stay in control.</p>
       </div>
 
-      {/* Action Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
         <Link to="/profile/edit">
           <div className="bg-white border rounded-lg p-4 shadow hover:shadow-lg transition">

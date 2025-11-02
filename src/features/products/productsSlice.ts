@@ -23,13 +23,19 @@ const productsSlice = createSlice({
   name: "products",
   initialState,
   reducers: {
+
+    // Set current pagination page
     setPage(state, action: PayloadAction<number>) {
       state.page = Math.max(0, action.payload);
     },
+
+    // Update search query and reset pagination
     setSearch(state, action: PayloadAction<string>) {
       state.search = action.payload;
       state.page = 0;
     },
+
+    // Update sorting options and reset pagination
     setSort(
       state,
       action: PayloadAction<{ sortBy: SortBy; sortOrder: SortOrder }>
@@ -38,6 +44,8 @@ const productsSlice = createSlice({
       state.sortOrder = action.payload.sortOrder;
       state.page = 0;
     },
+
+    // Update filter parameters
     setFilters(
       state,
       action: PayloadAction<{
@@ -54,6 +62,8 @@ const productsSlice = createSlice({
         state.maxPrice = action.payload.maxPrice;
       state.page = 0;
     },
+
+    // Reset filters and sorting to default values
     resetFilters(state) {
       state.minRating = 0;
       state.minPrice = 0;
@@ -64,7 +74,7 @@ const productsSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    // List
+    // Fetch product list
     builder
       .addCase(fetchProductsThunk.pending, (state) => {
         state.loading = true;
@@ -80,6 +90,7 @@ const productsSlice = createSlice({
         state.error = action.error.message || "Failed to load products";
       });
 
+    // Fetch product details by ID
     builder
       .addCase(fetchProductByIdThunk.pending, (state) => {
         state.loading = true;
@@ -103,13 +114,16 @@ export const { setPage, setSearch, setSort, setFilters, resetFilters } =
 
 export default productsSlice.reducer;
 
+// Selects the entire products slice from root state
 export const selectProductsState = (s: { products: ProductsState }) =>
   s.products;
 
+// Selects products after applying filters and sorting
 export const selectVisibleProducts = (s: { products: ProductsState }) => {
   const { items, sortBy, sortOrder, minRating, minPrice, maxPrice } =
     s.products;
 
+  // Filter products based on rating and price range
   let filtered = items.filter((p) => {
     const ratingOk = p.rating >= (minRating || 0);
     const minPriceOk = minPrice ? p.price >= minPrice : true;
@@ -117,6 +131,7 @@ export const selectVisibleProducts = (s: { products: ProductsState }) => {
     return ratingOk && minPriceOk && maxPriceOk;
   });
 
+  // Sorting logic mapping
   const compareMap: Record<SortBy, (a: Product, b: Product) => number> = {
     relevance: () => 0,
     price: (a, b) => a.price - b.price,
@@ -124,6 +139,8 @@ export const selectVisibleProducts = (s: { products: ProductsState }) => {
     title: (a, b) => a.title.localeCompare(b.title),
   };
   const compare = compareMap[sortBy];
+
+  // Apply ascending or descending sort
   filtered = [...filtered].sort((a, b) =>
     sortOrder === "asc" ? compare(a, b) : compare(b, a)
   );
@@ -131,6 +148,7 @@ export const selectVisibleProducts = (s: { products: ProductsState }) => {
   return filtered;
 };
 
+// Selects the currently selected product
 export const selectSelectedProduct = (s: { products: ProductsState }) => {
   const { selectedId, byId } = s.products;
   return selectedId ? byId[selectedId] : null;

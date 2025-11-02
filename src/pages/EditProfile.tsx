@@ -18,7 +18,7 @@ const EditProfile: React.FC = () => {
     try {
       await dispatch(updateProfileThunk({ firstName, lastName, email })).unwrap();
       alert("Profile updated");
-      navigate("/dashboard"); // ✅ redirect after successful update
+      navigate("/dashboard");
     } catch (err) {
       alert("Failed to update profile");
       console.error(err);

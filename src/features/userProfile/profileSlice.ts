@@ -5,11 +5,14 @@ import { updateProfileThunk } from "./profileThunks";
 
 const initialState: Profile = { firstName: "", lastName: "", email: "" };
 
+// Manages the user profile state
 const profileSlice = createSlice({
   name: "profile",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
+
+    // When the updateProfileThunk is fulfilled, the state is replaced with the updated profile data from the API response
     builder.addCase(
       updateProfileThunk.fulfilled,
       (state, action: PayloadAction<Profile>) => {

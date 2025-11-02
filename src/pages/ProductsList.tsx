@@ -7,7 +7,7 @@ import {
   setPage,
   setSearch,
   setSort,
-  setFilters,
+  setFilters,  
   resetFilters,
 } from "../features/products/productsSlice";
 import type { SortBy, SortOrder } from "../features/products/types";
